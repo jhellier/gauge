@@ -17,12 +17,15 @@ export default {
         data() {
             return {
                 count: '',
-                gaugeRange: 1000,
+                gaugeRange: 1015,
                 radianMultipler: 5,
+                radians: 0.0174532925,
                 gaugeText: '',
                 tickStart: 110,
                 tickLength: -10,
-                tickScale: d3.scaleLinear().range([0,200]).domain([0,200])
+                tickScale: d3.scaleLinear().range([0,1000]).domain([0,7]),
+                labelRadius: 110 + 20,
+                labelYOffset: 5
             }
         },
 
@@ -39,7 +42,7 @@ export default {
                 let newXPos = d3.mouse(target)[0];
                 let newYPos = -d3.mouse(target)[1];
                 let newRadianAngle = Math.atan2(newXPos,newYPos);
-                console.log('Radians ', newRadianAngle);
+                //console.log('Radians ', newRadianAngle);
 
 
                 return newRadianAngle;
@@ -70,14 +73,50 @@ export default {
                             console.log('Hello, event');
                             //d3.select(this).style('fill','green')
                         });
+
+                let radToDegree = 180/Math.PI;
+
+               let ticks = gaugeG.selectAll('.gauge-tick')
+                                .data(d3.range(-2.5,3.0,0.5))
+                                .enter()
+                                .append('line')
+                                .attr('class','gauge-tick')
+                                .attr('x1',0)
+                                .attr('x2',0)
+                                .attr('y1', that.tickStart)
+                                .attr('y2', that.tickStart + that.tickLength)
+                                .attr('transform', function(d) {
+                                    //return 'rotate(' + that.tickScale(d) + ')';
+                                    console.log(d * radToDegree);
+                                    return 'rotate(' + ((d * radToDegree) + 180) + ')';
+                                })
+
+
+                // let tickLabels = gaugeG.selectAll('.gauge-tick-label')
+                //                     .data(d3.range(0,1200,200))
+                //                     .enter()
+                //                     .append('text')
+                //                     .attr('class', 'gauge-tick-label')
+                //                     .attr('text-anchor','middle')
+                //                     .attr('x',function(d){
+                //                         return that.labelRadius*Math.sin(that.tickScale(d)*that.radians);
+                //                     })
+                //                     .attr('y',function(d){
+                //                         return -that.labelRadius*Math.cos(that.tickScale(d)*that.radians) + that.labelYOffset;
+                //                     })
+                //                     .text(function(d){
+                //                         return d;
+                //                     });
+
                         
                 that.gaugeText = gaugeG.append('text')
                                     .attr('dy', 70)
                                     .style('text-anchor','middle')
                                     .style('font-size',24)
-                                    .text('2000')        
+                                    .text('')        
 
                 let tau = 2 * Math.PI;
+
 
                 let arc = d3.arc()
                             .innerRadius(100)
@@ -121,18 +160,8 @@ export default {
 
                                 })
 
-                let ticks = gaugeG.selectAll('.gauge-tick')
-                                .data(d3.range(38,338,30))
-                                .enter()
-                                .append('line')
-                                .attr('class','gauge-tick')
-                                .attr('x1',0)
-                                .attr('x2',0)
-                                .attr('y1', that.tickStart)
-                                .attr('y2', that.tickStart + that.tickLength)
-                                .attr('transform', function(d) {
-                                    return 'rotate(' + that.tickScale(d) + ')';
-                                });
+                                     
+
 
                 let gaugeMarkerRing = gaugeG.append('path')                                
                                 .datum({endAngle: 1})
@@ -140,7 +169,7 @@ export default {
                                 .style('fill','#aaa')
                                 .attr('d',arc)
                                 .on('mouseover', function(event) {
-                                    console.log('This is the other one',event);
+                                   // console.log('This is the other one',event);
                                     
                                 })
                                 .on('mouseenter', function() {
@@ -200,7 +229,11 @@ export default {
 
 .gauge-tick {
     stroke-width:3;
-	stroke: #ddd;
+	stroke: #aaa;
+}
+
+.gauge-tick-label {
+    font-size: 20px;
 }
 
 .spanTitle {
