@@ -16,7 +16,7 @@ export default {
 
         data() {
             return {
-                count: '',
+                defaultLevel: '',
                 gaugeRange: 1015,
                 radianMultipler: 5,
                 radians: 0.0174532925,
@@ -58,8 +58,9 @@ export default {
 
                 let gaugeG = d3.selectAll('#gauge')
                     .append('svg')
-                        .attr('height',600)
-                        .attr('width',600)
+                        .attr('viewBox','0 0 600 600')
+                        // .attr('height',600)
+                        // .attr('width',600)
                     .append('g')
                         .attr('transform','translate(300,150)')
 
@@ -120,12 +121,12 @@ export default {
                 let arc = d3.arc()
                             .innerRadius(100)
                             .outerRadius(105)
-                            .startAngle(-2.5)
-                            //.endAngle(2.5)
+                            // .startAngle(-2.5)
+                            // .endAngle(2.5)
 
 
                 let gauge = gaugeG.append('path')
-                                .datum({endAngle: 2.5})
+                                .datum({startAngle: -2.5,endAngle: 2.5})
                                 .style('fill','#ddd')
                                 .attr('id','baseCircle')
                                 .attr('d',arc)
@@ -163,7 +164,7 @@ export default {
 
 
                 let gaugeMarkerRing = gaugeG.append('path')                                
-                                .datum({endAngle: 1})
+                                .datum({startAngle: -2.5,endAngle: 1})
                                 .attr('id','marker')
                                 .style('fill','#aaa')
                                 .attr('d',arc)
