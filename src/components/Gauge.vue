@@ -91,22 +91,25 @@ export default {
                                     return 'rotate(' + ((d * radToDegree) + 180) + ')';
                                 })
 
+                let tickLabelValues = d3.range(1000,-100,-100);
+                let tickLabels = gaugeG.selectAll('.gauge-tick-label')
+                                    .data(d3.range(-2.5,3.0,0.5))
+                                    .enter()
+                                    .append('text')
+                                    .attr('class', 'gauge-tick-label')
+                                    .attr('text-anchor','middle')
+                                    .attr('x',function(d){
+                                        //return that.labelRadius*Math.sin(that.tickScale(d)*that.radians);
+                                        return Math.sin(d + Math.PI) * 130;
 
-                // let tickLabels = gaugeG.selectAll('.gauge-tick-label')
-                //                     .data(d3.range(0,1200,200))
-                //                     .enter()
-                //                     .append('text')
-                //                     .attr('class', 'gauge-tick-label')
-                //                     .attr('text-anchor','middle')
-                //                     .attr('x',function(d){
-                //                         return that.labelRadius*Math.sin(that.tickScale(d)*that.radians);
-                //                     })
-                //                     .attr('y',function(d){
-                //                         return -that.labelRadius*Math.cos(that.tickScale(d)*that.radians) + that.labelYOffset;
-                //                     })
-                //                     .text(function(d){
-                //                         return d;
-                //                     });
+                                    })
+                                    .attr('y',function(d){
+                                        //return -that.labelRadius*Math.cos(that.tickScale(d)*that.radians) + that.labelYOffset;
+                                        return Math.cos(d + Math.PI) * 125 + 5;
+                                    })
+                                    .text(function(d,i){
+                                        return tickLabelValues[i];
+                                    });
 
                         
                 that.gaugeText = gaugeG.append('text')
