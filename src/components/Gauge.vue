@@ -86,8 +86,6 @@ export default {
                                 .attr('y1', that.tickStart)
                                 .attr('y2', that.tickStart + that.tickLength)
                                 .attr('transform', function(d) {
-                                    //return 'rotate(' + that.tickScale(d) + ')';
-                                    console.log(d * radToDegree);
                                     return 'rotate(' + ((d * radToDegree) + 180) + ')';
                                 })
 
@@ -99,12 +97,10 @@ export default {
                                     .attr('class', 'gauge-tick-label')
                                     .attr('text-anchor','middle')
                                     .attr('x',function(d){
-                                        //return that.labelRadius*Math.sin(that.tickScale(d)*that.radians);
                                         return Math.sin(d + Math.PI) * 130;
 
                                     })
                                     .attr('y',function(d){
-                                        //return -that.labelRadius*Math.cos(that.tickScale(d)*that.radians) + that.labelYOffset;
                                         return Math.cos(d + Math.PI) * 125 + 5;
                                     })
                                     .text(function(d,i){
