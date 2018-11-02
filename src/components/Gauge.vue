@@ -144,22 +144,22 @@ export default {
                                 })
                                 .on('mouseover', function() {
                                     d3.select(this).style('cursor','pointer')
-                                    let radians = that.getRadianAngle(this);                              
+                                    // let radians = that.getRadianAngle(this);                              
 
-                                    let text = Math.round(that.gaugeRange/that.radianMultipler * (radians + 2.5));
+                                    // let text = Math.round(that.gaugeRange/that.radianMultipler * (radians + 2.5));
 
-                                     d3.select('body')
-                                        .append('div')
-                                        .attr('class', 'toolTip')
-                                        .attr('id','toolTip')
-                                        .html(text)
-                                        .style('left', d3.event.pageX + 'px')
-                                        .style('top', d3.event.pageY - 18 + 'px');
+                                    //  d3.select('body')
+                                    //     .append('div')
+                                    //     .attr('class', 'toolTip')
+                                    //     .attr('id','toolTip')
+                                    //     .html(text)
+                                    //     .style('left', d3.event.pageX + 'px')
+                                    //     .style('top', d3.event.pageY - 18 + 'px');
 
                                 })
                                 .on('mouseout', function() {
                                     d3.select(this).style('cursor','default')
-                                    d3.selectAll('#toolTip').remove();
+                                    // d3.selectAll('#toolTip').remove();
 
                                 })
 
@@ -177,21 +177,21 @@ export default {
                                 })
                                 .on('mouseenter', function() {
                                     d3.select(this).style('cursor','pointer')
-                                   let radians = that.getRadianAngle(this);                              
+                                //    let radians = that.getRadianAngle(this);                              
 
-                                    let text = Math.round(that.gaugeRange/that.radianMultipler * (radians + 2.5));
+                                //     let text = Math.round(that.gaugeRange/that.radianMultipler * (radians + 2.5));
 
-                                     d3.select('body')
-                                        .append('div')
-                                        .attr('class', 'toolTip')
-                                        .attr('id','toolTip')
-                                        .html(text)
-                                        .style('left', d3.event.pageX + 'px')
-                                        .style('top', d3.event.pageY - 18 + 'px');                                    
+                                //      d3.select('body')
+                                //         .append('div')
+                                //         .attr('class', 'toolTip')
+                                //         .attr('id','toolTip')
+                                //         .html(text)
+                                //         .style('left', d3.event.pageX + 'px')
+                                //         .style('top', d3.event.pageY - 18 + 'px');                                    
                                 })
                                 .on('mouseout', function() {
                                     d3.select(this).style('cursor','default')
-                                    d3.selectAll('#toolTip').remove();
+                                    //d3.selectAll('#toolTip').remove();
                                 })                                
                                 .on('click', function() {
                                     let radians = that.getRadianAngle(this);                              
@@ -236,7 +236,7 @@ export default {
 }
 
 .gauge-tick-label {
-    font-size: 20px;
+    font-size: 14px;
 }
 
 .spanTitle {
