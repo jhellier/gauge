@@ -1,7 +1,7 @@
 <template>
-    <div id="gauge-div">
+    <div class="gauge-div" :id="id" :gaugeRangeMax="gaugeRangeMax">
         <span class="spanTitle">D3 Gauge</span>
-        <div id="gauge">
+        <div id="gauge" >
         </div>
     </div>
 </template>
@@ -9,22 +9,24 @@
 <script>
 /* eslint-disable */
 
-import * as d3 from "d3";
+import * as d3 from 'd3';
 
 export default {
-  name: "Gauge",
+  name: 'Gauge',
 
   props: {
     displayText: {
       type: String,
       default() {
-        return "Hello";
+        return 'Hello';
       }
-    }
+    },
+    id: String,
+    gaugeRangeMax: String,
+
   },
 
   data() {
-    let gaugeRangeMax = 528;
     let innerRadius = 100;
     let radiusWidth = 5;
     let outerRadius = innerRadius + radiusWidth;
@@ -34,15 +36,15 @@ export default {
     return {
       innerRadius,
       outerRadius,
-      gaugeRange: gaugeRangeMax,
+      gaugeRange: this.gaugeRangeMax,
       radianMultipler: 5,
-      tickSpacing: gaugeRangeMax/tickCount,
+      tickSpacing: this.gaugeRangeMax/tickCount,
       tickStart: outerRadius + radiusWidth,
       tickLength: -(2 * radiusWidth),
       labelRadius: outerRadius + labelOffset,
       radToDegree: 180 / Math.PI,
       gaugeG: {},
-      gaugeText: "",
+      gaugeText: '',
       gaugeMarkerRing: {},
       gaugeArc: {}
     };
@@ -92,26 +94,26 @@ export default {
     buildGaugeMarker: function() {
       let that = this;  
       that.gaugeMarkerRing = that.gaugeG
-        .append("path")
+        .append('path')
         .datum({ startAngle: -2.5, endAngle: -2.5 })
-        .attr("id", "marker")
-        .style("fill", "#aaa")
-        .attr("d", that.gaugeArc)
-        .on("mouseover", function(event) {
+        .attr('id', 'marker')
+        .style('fill', '#aaa')
+        .attr('d', that.gaugeArc)
+        .on('mouseover', function(event) {
           // console.log('This is the other one',event);
         })
-        .on("mouseenter", function() {
-          d3.select(this).style("cursor", "pointer");
+        .on('mouseenter', function() {
+          d3.select(this).style('cursor', 'pointer');
         })
-        .on("mouseout", function() {
-          d3.select(this).style("cursor", "default");
+        .on('mouseout', function() {
+          d3.select(this).style('cursor', 'default');
         })
-        .on("click", function() {
+        .on('click', function() {
           let radians = that.getRadianAngle(this);
           that.gaugeMarkerRing
             .transition()
             .duration(2000)
-            .attrTween("d", that.arcTween(radians));
+            .attrTween('d', that.arcTween(radians));
 
           let text = Math.round(
             (that.gaugeRange / that.radianMultipler) * (radians + 2.5)
@@ -126,49 +128,49 @@ export default {
       let that = this;
 
       that.gaugeG = d3
-        .selectAll("#gauge")
-            .append("svg")
-                .attr("viewBox", "0 0 800 800")
-            .append("g")
-                .attr("transform", "translate(400,150)");
+        .selectAll('#gauge')
+            .append('svg')
+                .attr('viewBox', '0 0 800 800')
+            .append('g')
+                .attr('transform', 'translate(400,150)');
 
       that.gaugeG
-        .append("circle")
-            .attr("r", 30)
-            .attr("cx", 0)
-            .attr("cy", 0)
-            .attr("id", "wCircle")
-            .style("fill", "#ccc")
-            .on("click", function() {
-              console.log("Hello, event");
+        .append('circle')
+            .attr('r', 30)
+            .attr('cx', 0)
+            .attr('cy', 0)
+            .attr('id', 'wCircle')
+            .style('fill', '#ccc')
+            .on('click', function() {
+              console.log('Hello, event');
             });
 
       let ticks = that.gaugeG
-        .selectAll(".gauge-tick")
+        .selectAll('.gauge-tick')
             .data(d3.range(-2.5, 3, 0.5))
             .enter()
-            .append("line")
-                .attr("class", "gauge-tick")
-                .attr("x1", 0)
-                .attr("x2", 0)
-                .attr("y1", that.tickStart)
-                .attr("y2", that.tickStart + that.tickLength)
-                .attr("transform", function(d) {
-                return "rotate(" + (d * that.radToDegree + 180) + ")";
+            .append('line')
+                .attr('class', 'gauge-tick')
+                .attr('x1', 0)
+                .attr('x2', 0)
+                .attr('y1', that.tickStart)
+                .attr('y2', that.tickStart + that.tickLength)
+                .attr('transform', function(d) {
+                return 'rotate(' + (d * that.radToDegree + 180) + ')';
                 });
 
       let tickLabelValues = d3.range(that.gaugeRange, -100, -that.tickSpacing);
       let tickLabels = that.gaugeG
-        .selectAll(".gauge-tick-label")
+        .selectAll('.gauge-tick-label')
             .data(d3.range(-2.5, 3.0, 0.5))
             .enter()
-            .append("text")
-                .attr("class", "gauge-tick-label")
-                .attr("text-anchor", "middle")
-                .attr("x", function(d) {
+            .append('text')
+                .attr('class', 'gauge-tick-label')
+                .attr('text-anchor', 'middle')
+                .attr('x', function(d) {
                 return Math.sin(d + Math.PI) * 130;
                 })
-                .attr("y", function(d) {
+                .attr('y', function(d) {
                 return Math.cos(d + Math.PI) * 125 + 5;
                 })
                 .text(function(d, i) {
@@ -176,26 +178,26 @@ export default {
                 });
 
       that.gaugeText = that.gaugeG
-        .append("text")
-            .attr("dy", 70)
-            .style("text-anchor", "middle")
-            .style("font-size", 24)
-            .text("");
+        .append('text')
+            .attr('dy', 70)
+            .style('text-anchor', 'middle')
+            .style('font-size', 24)
+            .text('');
 
       let tau = 2 * Math.PI;
 
       that.gaugeG
-        .append("path")
+        .append('path')
         .datum({ startAngle: -2.515, endAngle: 2.515 })
-            .style("fill", "#ddd")
-            .attr("id", "baseCircle")
-            .attr("d", that.gaugeArc)
-            .on("click", function() {
+            .style('fill', '#ddd')
+            .attr('id', 'baseCircle')
+            .attr('d', that.gaugeArc)
+            .on('click', function() {
                 let radians = that.getRadianAngle(this);
                 that.gaugeMarkerRing
                     .transition()
                     .duration(2000)
-                    .attrTween("d", that.arcTween(radians));
+                    .attrTween('d', that.arcTween(radians));
 
                 let text = Math.round(
                     (that.gaugeRange / that.radianMultipler) * (radians + 2.5)
@@ -204,11 +206,11 @@ export default {
 
                 return;
             })
-            .on("mouseover", function() {
-                d3.select(this).style("cursor", "pointer");
+            .on('mouseover', function() {
+                d3.select(this).style('cursor', 'pointer');
             })
-            .on("mouseout", function() {
-                d3.select(this).style("cursor", "default");
+            .on('mouseout', function() {
+                d3.select(this).style('cursor', 'default');
             });
     }
   }
@@ -217,7 +219,7 @@ export default {
 
 
 <style>
-#gauge-div {
+.gauge-div {
   height: 100%;
   width: 100%;
 }

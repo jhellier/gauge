@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Gauge/>
+    <Gauge id="facebookFilter" gaugeRangeMax="3000" />
   </div>
 </template>
 
