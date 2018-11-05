@@ -124,7 +124,6 @@ export default {
     buildGauge: function() {
       let that = this;
 
-      let gaugeX = document.body.clientWidth/2;
       that.gaugeG = d3
         .selectAll("#gauge")
             .append("svg")
