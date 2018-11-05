@@ -24,18 +24,19 @@ export default {
   },
 
   data() {
-    let gaugeRangeMax = 1000;
+    let gaugeRangeMax = 528;
     let innerRadius = 100;
     let radiusWidth = 5;
     let outerRadius = innerRadius + radiusWidth;
     let labelOffset = 20;
-    let gaugeRangeExtra = 10;
+    let tickCount = 10;
 
     return {
       innerRadius,
       outerRadius,
-      gaugeRange: gaugeRangeMax + gaugeRangeExtra,
+      gaugeRange: gaugeRangeMax,
       radianMultipler: 5,
+      tickSpacing: gaugeRangeMax/tickCount,
       tickStart: outerRadius + radiusWidth,
       tickLength: -(2 * radiusWidth),
       labelRadius: outerRadius + labelOffset,
@@ -139,7 +140,7 @@ export default {
             .attr("id", "wCircle")
             .style("fill", "#ccc")
             .on("click", function() {
-            console.log("Hello, event");
+              console.log("Hello, event");
             });
 
       let ticks = that.gaugeG
@@ -156,7 +157,7 @@ export default {
                 return "rotate(" + (d * that.radToDegree + 180) + ")";
                 });
 
-      let tickLabelValues = d3.range(1000, -100, -100);
+      let tickLabelValues = d3.range(that.gaugeRange, -100, -that.tickSpacing);
       let tickLabels = that.gaugeG
         .selectAll(".gauge-tick-label")
             .data(d3.range(-2.5, 3.0, 0.5))
@@ -171,7 +172,7 @@ export default {
                 return Math.cos(d + Math.PI) * 125 + 5;
                 })
                 .text(function(d, i) {
-                return tickLabelValues[i];
+                return Number(tickLabelValues[i]).toFixed(0);
                 });
 
       that.gaugeText = that.gaugeG
