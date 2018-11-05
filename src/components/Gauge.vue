@@ -48,7 +48,7 @@ export default {
   },
 
   created: function() {
-    console.log(this.displayText);
+    //console.log(this.displayText);
   },
 
   mounted: function() {
@@ -124,12 +124,13 @@ export default {
     buildGauge: function() {
       let that = this;
 
+      let gaugeX = document.body.clientWidth/2;
       that.gaugeG = d3
         .selectAll("#gauge")
             .append("svg")
-                .attr("viewBox", "0 0 500 500")
+                .attr("viewBox", "0 0 800 800")
             .append("g")
-                .attr("transform", "translate(300,150)");
+                .attr("transform", "translate(400,150)");
 
       that.gaugeG
         .append("circle")
