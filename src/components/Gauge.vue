@@ -1,8 +1,9 @@
 <template>
     <div class="gauge-div" :gauge_id="gauge_id" 
-          :gauge_range_max="gauge_range_max">
-        <span class="spanTitle">D3 Gauge</span>
-        <div id="gauge" >
+          :gauge_range_max="gauge_range_max"
+          :gauge_icon="gauge_icon"
+          :color="icon_color">
+        <div :id="gauge_id" >
         </div>
     </div>
 </template>
@@ -24,7 +25,9 @@ export default {
       }
     },
     gauge_id: String,
-    gauge_range_max: String
+    gauge_range_max: String,
+    gauge_icon: String,
+    icon_color: String
 
   },
 
@@ -37,6 +40,7 @@ export default {
     let gaugeRange = this.gauge_range_max;
 
     return {
+      gaugeId: this.gauge_id,
       innerRadius,
       outerRadius,
       gaugeRange: gaugeRange,
@@ -50,7 +54,9 @@ export default {
       gaugeText: {},
       gaugeMarkerRing: {},
       gaugeArc: {},
-      changeEventName: this.gauge_id + 'ChangeEvent'
+      changeEventName: this.gauge_id + 'ChangeEvent',
+      gaugeIcon: this.gauge_icon,
+      iconColor: this.icon_color
     };
   },
 
@@ -139,22 +145,21 @@ export default {
       let that = this;
 
       that.gaugeG = d3
-        .selectAll('#gauge')
+        .selectAll('#' + that.gaugeId)
             .append('svg')
-                .attr('viewBox', '0 0 800 800')
+                .attr('viewBox', '0 0 300 275')
             .append('g')
-                .attr('transform', 'translate(400,150)');
+                .attr('transform', 'translate(150,150)');
 
-      that.gaugeG
-        .append('circle')
-            .attr('r', 30)
-            .attr('cx', 0)
-            .attr('cy', 0)
-            .attr('id', 'wCircle')
-            .style('fill', '#ccc')
-            .on('click', function() {
-              console.log('Hello, event');
-            });
+      that.gaugeG.append('svg:foreignObject')
+              .attr('height', '25px')
+              .attr('width', '25px')
+              .attr('x',-30)
+              .attr('y',-70)
+              .style('font-size',80)
+              .style('color',that.iconColor)
+              .html('<i class="fab ' + that.gaugeIcon + '"></i>');
+
 
       let ticks = that.gaugeG
         .selectAll('.gauge-tick')
