@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    <Gauge id="facebookFilter" gaugeRangeMax="3000" />
+    <main1 />
   </div>
 </template>
 
 <script>
-import Gauge from './components/Gauge.vue'
+
+import main1 from './components/Main.vue'
 
 export default {
   name: 'app',
   components: {
-    Gauge
+    main1
   }
 }
 </script>

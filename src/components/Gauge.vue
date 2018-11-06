@@ -1,5 +1,5 @@
 <template>
-    <div class="gauge-div" :id="id" :gaugeRangeMax="gaugeRangeMax">
+    <div class="gauge-div" :gauge_id="id" :gaugeRangeMax="gaugeRangeMax">
         <span class="spanTitle">D3 Gauge</span>
         <div id="gauge" >
         </div>
@@ -32,11 +32,12 @@ export default {
     let outerRadius = innerRadius + radiusWidth;
     let labelOffset = 20;
     let tickCount = 10;
+    let gaugeRange = this.gaugeRangeMax;
 
     return {
       innerRadius,
       outerRadius,
-      gaugeRange: this.gaugeRangeMax,
+      gaugeRange: gaugeRange,
       radianMultipler: 5,
       tickSpacing: this.gaugeRangeMax/tickCount,
       tickStart: outerRadius + radiusWidth,
@@ -44,14 +45,14 @@ export default {
       labelRadius: outerRadius + labelOffset,
       radToDegree: 180 / Math.PI,
       gaugeG: {},
-      gaugeText: '',
+      gaugeText: {},
       gaugeMarkerRing: {},
       gaugeArc: {}
     };
   },
 
   created: function() {
-    //console.log(this.displayText);
+    console.log(this.displayText);
   },
 
   mounted: function() {
@@ -68,7 +69,7 @@ export default {
       return newRadianAngle;
     },
 
-    setGaugeValue: function(gaugeText, value) {
+    setGaugeValue: function(value) {
       this.gaugeText.text(value);
     },
 
@@ -112,7 +113,7 @@ export default {
           let radians = that.getRadianAngle(this);
           that.gaugeMarkerRing
             .transition()
-            .duration(2000)
+            .duration(1000)
             .attrTween('d', that.arcTween(radians));
 
           let text = Math.round(
@@ -182,7 +183,7 @@ export default {
             .attr('dy', 70)
             .style('text-anchor', 'middle')
             .style('font-size', 24)
-            .text('');
+            .text('0000');
 
       let tau = 2 * Math.PI;
 
