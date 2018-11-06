@@ -1,5 +1,6 @@
 <template>
-    <div class="gauge-div" :gauge_id="id" :gaugeRangeMax="gaugeRangeMax">
+    <div class="gauge-div" :gauge_id="gauge_id" 
+          :gauge_range_max="gauge_range_max">
         <span class="spanTitle">D3 Gauge</span>
         <div id="gauge" >
         </div>
@@ -9,6 +10,7 @@
 <script>
 /* eslint-disable */
 
+import { EventBus } from '../App.vue';
 import * as d3 from 'd3';
 
 export default {
@@ -21,8 +23,8 @@ export default {
         return 'Hello';
       }
     },
-    id: String,
-    gaugeRangeMax: String,
+    gauge_id: String,
+    gauge_range_max: String
 
   },
 
@@ -32,14 +34,14 @@ export default {
     let outerRadius = innerRadius + radiusWidth;
     let labelOffset = 20;
     let tickCount = 10;
-    let gaugeRange = this.gaugeRangeMax;
+    let gaugeRange = this.gauge_range_max;
 
     return {
       innerRadius,
       outerRadius,
       gaugeRange: gaugeRange,
       radianMultipler: 5,
-      tickSpacing: this.gaugeRangeMax/tickCount,
+      tickSpacing: gaugeRange/tickCount,
       tickStart: outerRadius + radiusWidth,
       tickLength: -(2 * radiusWidth),
       labelRadius: outerRadius + labelOffset,
@@ -47,12 +49,13 @@ export default {
       gaugeG: {},
       gaugeText: {},
       gaugeMarkerRing: {},
-      gaugeArc: {}
+      gaugeArc: {},
+      changeEventName: this.gauge_id + 'ChangeEvent'
     };
   },
 
   created: function() {
-    console.log(this.displayText);
+    //console.log(this.displayText);
   },
 
   mounted: function() {
@@ -62,6 +65,10 @@ export default {
   },
 
   methods: {
+
+    fireChangeEvent: function(args) {
+
+    },
     getRadianAngle: function(target) {
       let newXPos = d3.mouse(target)[0];
       let newYPos = -d3.mouse(target)[1];
@@ -70,7 +77,7 @@ export default {
     },
 
     setGaugeValue: function(value) {
-      this.gaugeText.text(value);
+      //this.gaugeText.text(value);
     },
 
     setGaugeArc: function() {
@@ -120,6 +127,9 @@ export default {
             (that.gaugeRange / that.radianMultipler) * (radians + 2.5)
           );
           that.gaugeText.text(text);
+
+          EventBus.$emit(that.changeEventName,text);
+          
           return;
         });
 
@@ -169,13 +179,13 @@ export default {
                 .attr('class', 'gauge-tick-label')
                 .attr('text-anchor', 'middle')
                 .attr('x', function(d) {
-                return Math.sin(d + Math.PI) * 130;
+                  return Math.sin(d + Math.PI) * 130;
                 })
                 .attr('y', function(d) {
-                return Math.cos(d + Math.PI) * 125 + 5;
+                  return Math.cos(d + Math.PI) * 125 + 5;
                 })
                 .text(function(d, i) {
-                return Number(tickLabelValues[i]).toFixed(0);
+                  return Number(tickLabelValues[i]).toFixed(0);
                 });
 
       that.gaugeText = that.gaugeG
@@ -204,6 +214,8 @@ export default {
                     (that.gaugeRange / that.radianMultipler) * (radians + 2.5)
                 );
                 that.gaugeText.text(text);
+
+                EventBus.$emit(that.changeEventName,text);
 
                 return;
             })

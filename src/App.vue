@@ -1,17 +1,33 @@
 <template>
   <div id="app">
-    <main1 />
+    <Gauge  gauge_id="facebookFilter" gauge_range_max="5000"/>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
+import Vue from 'vue'
+import Gauge from './components/Gauge.vue'
 
-import main1 from './components/Main.vue'
+export const EventBus = new Vue();
+
 
 export default {
   name: 'app',
   components: {
-    main1
+    Gauge
+  },
+  created: function() {
+    this.initEventHandlers();
+  },
+  methods: {
+    initEventHandlers: function() {
+      console.log('Hello there');
+      EventBus.$on('facebookFilterChangeEvent', msg => {
+        console.log(msg);
+      })
+
+    }
   }
 }
 </script>
