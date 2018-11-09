@@ -1,6 +1,8 @@
 <template>
     <div class="gauge-div" :gauge_id="gauge_id" 
           :gauge_range_max="gauge_range_max"
+          :gauge_range_default="gauge_range_default"
+          :gauge_text="gauge_text"
           :gauge_icon="gauge_icon"
           :color="icon_color">
         <div :id="gauge_id" >
@@ -11,8 +13,9 @@
 <script>
 /* eslint-disable */
 
-import { EventBus } from '../App.vue';
+import { EventBus } from '../main.js';
 import * as d3 from 'd3';
+
 
 export default {
   name: 'Gauge',
@@ -26,8 +29,10 @@ export default {
     },
     gauge_id: String,
     gauge_range_max: String,
+    gauge_range_default: String,
     gauge_icon: String,
-    icon_color: String
+    icon_color: String,
+    gauge_text: String
 
   },
 
@@ -37,24 +42,29 @@ export default {
     let outerRadius = innerRadius + radiusWidth;
     let labelOffset = 20;
     let tickCount = 10;
-    let gaugeRange = this.gauge_range_max;
 
     return {
       gaugeId: this.gauge_id,
       innerRadius,
       outerRadius,
-      gaugeRange: gaugeRange,
+      gaugeRange: this.gauge_range_max,
+      gaugeRangeMax: this.gauge_range_max,
+      gaugeRangeDefault: this.gauge_range_default,
       radianMultipler: 5,
-      tickSpacing: gaugeRange/tickCount,
+      tickSpacing: this.gauge_range_max/tickCount,
       tickStart: outerRadius + radiusWidth,
       tickLength: -(2 * radiusWidth),
       labelRadius: outerRadius + labelOffset,
       radToDegree: 180 / Math.PI,
       gaugeG: {},
-      gaugeText: {},
-      gaugeMarkerRing: {},
+      gaugeText: this.gauge_text,
+      gaugeCounterText: this.gauge_range_default,
+      gaugeMarkerRing: {},      
       gaugeArc: {},
       changeEventName: this.gauge_id + 'ChangeEvent',
+      toggleEventName: this.gauge_id + 'ToggleEvent',
+      resetEventName: this.gauge_id + 'ResetEvent',
+      viewShowing: false,
       gaugeIcon: this.gauge_icon,
       iconColor: this.icon_color
     };
@@ -67,7 +77,7 @@ export default {
   mounted: function() {
     this.setGaugeArc();  
     this.buildGauge();
-    this.buildGaugeMarker();
+    this.buildGaugeMarker(this.getGaugeMarkerPosInRadians());
   },
 
   methods: {
@@ -83,7 +93,7 @@ export default {
     },
 
     setGaugeValue: function(value) {
-      //this.gaugeText.text(value);
+      //this.gaugeCounterText.text(value);
     },
 
     setGaugeArc: function() {
@@ -105,13 +115,22 @@ export default {
       },
 
 
-    buildGaugeMarker: function() {
+      getGaugeMarkerPosInRadians: function() {
+        if (this.gaugeRangeDefault == undefined || this.gaugeRangeDefault == 0)
+          return -2.5;
+        let gaugeRangeDivisor = this.gaugeRangeMax/this.radianMultipler;
+        let gaugePortion = this.gaugeRangeDefault/gaugeRangeDivisor;
+        return gaugePortion - 2.5;
+      },
+
+
+    buildGaugeMarker: function(endAngle) {
       let that = this;  
       that.gaugeMarkerRing = that.gaugeG
         .append('path')
-        .datum({ startAngle: -2.5, endAngle: -2.5 })
+        .datum({ startAngle: -2.5, endAngle: endAngle })
         .attr('id', 'marker')
-        .style('fill', '#aaa')
+        .style('fill', '#777')
         .attr('d', that.gaugeArc)
         .on('mouseover', function(event) {
           // console.log('This is the other one',event);
@@ -132,7 +151,7 @@ export default {
           let text = Math.round(
             (that.gaugeRange / that.radianMultipler) * (radians + 2.5)
           );
-          that.gaugeText.text(text);
+          that.gaugeCounterText.text(text);
 
           EventBus.$emit(that.changeEventName,text);
           
@@ -152,13 +171,22 @@ export default {
                 .attr('transform', 'translate(150,150)');
 
       that.gaugeG.append('svg:foreignObject')
-              .attr('height', '25px')
-              .attr('width', '25px')
-              .attr('x',-30)
+              .attr('x',-35)
               .attr('y',-70)
               .style('font-size',80)
               .style('color',that.iconColor)
-              .html('<i class="fab ' + that.gaugeIcon + '"></i>');
+              .html('<i class="fab ' + that.gaugeIcon + '"></i>')
+              .on('click', function() {
+                that.viewShowing = !that.viewShowing;
+
+                EventBus.$emit(that.toggleEventName, that.viewShowing);
+              })
+              .on('mouseenter', function() {
+                d3.select(this).style('cursor', 'pointer');
+              })
+              .on('mouseout', function() {
+                d3.select(this).style('cursor', 'default');
+              })              
 
 
       let ticks = that.gaugeG
@@ -172,7 +200,7 @@ export default {
                 .attr('y1', that.tickStart)
                 .attr('y2', that.tickStart + that.tickLength)
                 .attr('transform', function(d) {
-                return 'rotate(' + (d * that.radToDegree + 180) + ')';
+                  return 'rotate(' + (d * that.radToDegree + 180) + ')';
                 });
 
       let tickLabelValues = d3.range(that.gaugeRange, -100, -that.tickSpacing);
@@ -193,12 +221,35 @@ export default {
                   return Number(tickLabelValues[i]).toFixed(0);
                 });
 
-      that.gaugeText = that.gaugeG
+      that.gaugeCounterText = that.gaugeG
         .append('text')
             .attr('dy', 70)
             .style('text-anchor', 'middle')
             .style('font-size', 24)
-            .text('0000');
+            .text(that.gaugeCounterText)
+         .on('click', function() {
+           that.gaugeCounterText.text(that.gaugeRangeDefault);
+            that.gaugeMarkerRing
+              .transition()
+              .duration(1000)
+              .attrTween('d', that.arcTween(that.getGaugeMarkerPosInRadians()));
+            
+            EventBus.$emit(that.resetEventName, that.gaugeRangeDefault);
+
+         }) 
+        .on('mouseenter', function() {
+            d3.select(this).style('cursor', 'pointer');
+         })
+        .on('mouseout', function() {
+            d3.select(this).style('cursor', 'default');
+         })   
+
+      that.gaugeG
+        .append('text')
+            .attr('dy', 40)
+            .style('text-anchor', 'middle')
+            .style('font-size', 18)
+            .text(that.gaugeText);
 
       let tau = 2 * Math.PI;
 
@@ -212,13 +263,13 @@ export default {
                 let radians = that.getRadianAngle(this);
                 that.gaugeMarkerRing
                     .transition()
-                    .duration(2000)
+                    .duration(1000)
                     .attrTween('d', that.arcTween(radians));
 
                 let text = Math.round(
                     (that.gaugeRange / that.radianMultipler) * (radians + 2.5)
                 );
-                that.gaugeText.text(text);
+                that.gaugeCounterText.text(text);
 
                 EventBus.$emit(that.changeEventName,text);
 
