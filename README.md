@@ -1,6 +1,6 @@
 # gauge
 
-Work In Progress. This is a Vue.js supported gauge which will allow any range and any set of values. The gauge is a D3.js implementation. It is responsive, enabling it to be used in any size area. 
+Work In Progress. This is a Vue.js supported gauge which will allow any range and any set of values. The gauge is a D3.js implementation. It is responsive, enabling it to be used in any size area. The gauge icon is a standard font awesome icon where you pass the icon name as an attribute. Ex. gauge_icon="fa-facebook" for the facebook icon. 
 
 * Actions Supported
   * Click on the icon toggles display of data
