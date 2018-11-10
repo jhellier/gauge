@@ -1,10 +1,10 @@
 # gauge
 
-Work In Progress. This is a Vue.js supported gauge which will allow any range and any set of values. The gauge is a D3.js implementation. It is responsive, enabling it to be used in any size area. When fully implemented, it will take in a range from min to max. It will have an assortment of controls within the center of the gauge and will allow an image to be placed in the center of the gauge. 
+Work In Progress. This is a Vue.js supported gauge which will allow any range and any set of values. The gauge is a D3.js implementation. It is responsive, enabling it to be used in any size area. 
 
 * Actions Supported
   * Click on the icon toggles display of data
-  * Click on the gauge ring sets the value fo the gauge
+  * Click on the gauge ring sets the value of the gauge
   * Click on the gauge text display resets the gauge to the default value
   
 Here is the current screenshot: (Updated as I progress)
