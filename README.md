@@ -1,9 +1,55 @@
 # gauge
 
-Work In Progress. This gauge will allow any range and any set of values. It will be responsive, enabling it to be used in any size area. When fully implemented, it will take in a range from min to max. It will have an assortment of controls within the center of the gauge and will allow an image to be placed in the center of the gauge.
+Work In Progress. This is a Vue.js supported gauge which will allow any range and any set of values. The gauge is a D3.js implementation. It is responsive, enabling it to be used in any size area. When fully implemented, it will take in a range from min to max. It will have an assortment of controls within the center of the gauge and will allow an image to be placed in the center of the gauge. 
+
+* Actions Supported
+  * Click on the icon toggles display of data
+  * Click on the gauge ring sets the value fo the gauge
+  * Click on the gauge text display resets the gauge to the default value
+  
 Here is the current screenshot: (Updated as I progress)
 
 ![alt text](gauge.png)
+
+This is a code block from a Vue file showing the gauge tag definition. 
+```
+<template>
+    <div class="gauge-div" :gauge_id="gauge_id" 
+          :gauge_range_max="gauge_range_max"
+          :gauge_range_default="gauge_range_default"
+          :gauge_text="gauge_text"
+          :gauge_icon="gauge_icon"
+          :color="icon_color">
+        <div :id="gauge_id" >
+        </div>
+    </div>
+</template>
+```
+The :attributeName="attributeName" seems clumsy but it works. Need to see if there is a cleaner way to do this.
+
+This is the use of it on a Vue page
+```
+<div class="col-sm">   
+   <Gauge  gauge_id="facebookFilter" gauge_range_max="25000" gauge_range_default="2000" gauge_icon="fa-facebook"    gauge_text="Checkins" icon_color="blue"/>
+</div>
+
+<script>
+import Gauge from './Gauge.vue'
+
+export default {
+  name: 'somePageSection',
+  components: {
+    SomeComponent,
+    Gauge
+    },
+
+  ...
+  }
+ </script> 
+
+```
+
+
 
 ## Project setup
 ```
