@@ -30,7 +30,11 @@ The :attributeName="attributeName" seems clumsy but it works. Need to see if the
 This is the use of it on a Vue page
 ```
 <div class="col-sm">   
-   <Gauge  gauge_id="facebookFilter" gauge_range_max="25000" gauge_range_default="2000" gauge_icon="fa-facebook"    gauge_text="Checkins" icon_color="blue"/>
+   <Gauge  gauge_id="facebookFilter" 
+           gauge_range_max="25000" 
+           gauge_range_default="2000" 
+           gauge_icon="fa-facebook"    
+           gauge_text="Checkins" icon_color="blue"/>
 </div>
 
 <script>
